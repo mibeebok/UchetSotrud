@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="style.css">
     <title>Учёт сотрудников</title>
 </head>
 <body>
@@ -25,14 +26,16 @@
         </thead>
         <tbody>       
             <?php
-            $mysqli = new mysqli("127.0.0.1", "root", "", "UchetSotr"); //подключила бд
-            if (mysqli_connect_errno()) { // проверка на корректное соединение
+            $mysqli = new mysqli("127.0.0.1", "root", "", "UchetSotr");
+            if (mysqli_connect_errno()) { 
             echo "Подключение невозможно: ".mysqli_connect_error();
             }
-            $result = $mysqli->prepare("SELECT * FROM 'UchetSotr' "); //запрос на вывод таблицы
-            $result->execute();
-            $list = $result->fetchAll(PDO::FETCH_ASSOC);
-            foreach ($list as $row): // вывод данных из таблицы
+            $result = $mysqli->query("SELECT * FROM Sotr"); //изменила название таблицы бож
+            if (!$result) { //првоерка на успешное выполнение запроса
+                echo "Ошибка запроса: " . $mysqli->error;
+            } else {
+                if ($result->num_rows > 0) {
+            while/**неправильная структура цикла чтобы результат запроса возвращался по строкам, на е весь сразу*/ ($row = $result->fetch_assoc()) { //Неправильное использование $result, так как это не объект PDOStatement
             ?>
                 <tr> 
                     <td><?php echo $row['IdSotr']; ?></td>
@@ -48,7 +51,12 @@
 
                 </tr>
             <?php
-            $mysqli ->close(); //прекращение соединения
+            }
+                } else { //проверка на пустую таблицу
+                    echo "<tr><td colspan='10'>Нет данных.</td></tr>";
+                }
+                $mysqli->close();
+            }
             ?>
             
         </tbody>
