@@ -11,11 +11,12 @@
     <script src="mask.js"></script>
     <title>Учёт сотрудников</title>
 </head>
-<body>
+<body class="diagonal-gradient">
     <h1> Учёт сотрудников </h1>
     <table>
         <thead>
             <tr>
+<!-- Шапка таблицы-->
                 <th>Код сотрудника</th>
                 <th style=width:15%;>ФИО</th>
                 <th>Дата рождения</th>
@@ -31,7 +32,7 @@
             </tr>
         </thead>
         <tbody>      
-            <?php
+            <?php //подключение бд
             $mysqli = new mysqli("127.0.0.1", "root", "", "UchetSotr");
 
             $host = '127.0.0.1';
@@ -39,10 +40,8 @@
             $username = 'root';
             $password = '';
 
-            
-            //добавление нового сотрудника
+            //добавление нового сотрудника запрос
             if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['FIO'])) {
-            // Получение данных из формы 
             $FIO = $_POST['FIO'];
             $DataRojdeniya = $_POST['DataRojdeniya'];
             $SeriyaNomerPasporta = $_POST['SeriyaNomerPasporta'];
@@ -56,12 +55,8 @@
             try {
                 $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
                 $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    
-                // SQL-запрос для вставки данных
                 $sql = "INSERT INTO Sotr (FIO, DataRojdeniya, SeriyaNomerPasporta, NomerTelefona, AdresProjivaniya, Otdel, Doljnost, RazmerZP, DataPrinyatiyaNaRabotu, StatusRaboti)
                         VALUES (:FIO, :DataRojdeniya, :SeriyaNomerPasporta, :NomerTelefona, :AdresProjivaniya, :Otdel, :Doljnost, :RazmerZP, :DataPrinyatiyaNaRabotu, :StatusRaboti)";
-    
-                // Подготовка и выполнение запроса 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute([
                     ':FIO' => $FIO,
@@ -75,22 +70,31 @@
                     ':DataPrinyatiyaNaRabotu' => $DataPrinyatiyaNaRabotu,
                     ':StatusRaboti' => $StatusRaboti
                 ]);
-    
-                echo "Сотрудник успешно добавлен!";
-            } catch (PDOException $e) {
-                echo "Ошибка: " . $e->getMessage();
-            }
+                header("Location: " . $_SERVER['PHP_SELF']); 
+                exit(); 
+                } catch (PDOException $e) { 
+                    echo "Ошибка: " . $e->getMessage(); 
+                }
+                
+            
             }   
+            //проверка подключения
             if (mysqli_connect_errno()) { 
             echo "Подключение невозможно: ".mysqli_connect_error();
             }
-
+           
+            //Фильтр по отделу и должности
             $FOtdel = isset($_GET['FOtdel']) ?$_GET['FOtdel'] : '';
+            $FFIO = isset($_GET['FFIO']) ?$_GET['FFIO'] : '';
             $FDoljnost = isset($_GET['FDoljnost']) ? $_GET['FDoljnost'] : '';
 
             $query = "SELECT * FROM Sotr WHERE 1=1";
+           
             if ($FOtdel) {
                 $query .= " AND Otdel LIKE '%$FOtdel%'";
+            }
+            if ($FFIO) {
+                $query .= " AND FIO LIKE '%$FFIO%'";
             }
             if ($FDoljnost) {
                 $query .= " AND Doljnost LIKE '%$FDoljnost%'";
@@ -98,7 +102,7 @@
             $result = $mysqli->query($query); 
             if (!$result) {
                 echo "Ошибка запроса: " . $mysqli->error;
-            } else {
+            } else {//заполнения таблицы
                 if ($result->num_rows > 0) {
             while ($row = $result->fetch_assoc()) {
             ?>
@@ -126,12 +130,13 @@
             
         </tbody>
     </table>
-    <p><b> Фильтрация соотрудников по должности или отделу: </b></p>
-    <!-- фильтр!-->
+    <p><b> Фильтрация соотрудников по должности или отделу и поиск по ФИО: </b></p>
     <!--возможно проблемой будет то что name не соответствует названию столбца в таблице !-->
     <form class = "filtr" method="GET" action="">
         <label   class = "filtrO" for="Otdel">Отдел:</label>
         <input type="text" id="Otdel" name="FOtdel" value="<?php echo isset($_GET['Otdel']) ? htmlspecialchars($_GET['Otdel']) : ''; ?>">
+        <label   class = "filtrO" for="FIO">ФИО:</label>
+        <input type="text" id="FIO" name="FFIO" value="<?php echo isset($_GET['FIO']) ? htmlspecialchars($_GET['FIO']) : ''; ?>">
         <label  class = "filtr" for="Doljnost">Должность:</label>
         <input type="text" id="Doljnost" name="FDoljnost" value="<?php echo isset($_GET['Doljnost']) ? htmlspecialchars($_GET['Doljnost']) : ''; ?>">
         <button type="submit">Найти</button>
@@ -141,7 +146,7 @@
         <input  class = "SNS" type="text" name="FIO" placeholder="ФИО" required>
         <input  class = "SNS" type="date" name="DataRojdeniya" placeholder="Дата рождения" required>
         <input  class = "SNS" type="text" name="SeriyaNomerPasporta" placeholder="Серия и номер паспорта" required>
-        <input  class = "SNS" type="text" name="NomerTelefona" placeholder="Номер телефона" required>
+        <input  class = "SNS" type="text" name="NomerTelefona" placeholder="8(___)___-__-__" required>
         <input  class = "SNS" type="text" name="AdresProjivaniya" placeholder="Адрес проживания" required>
         <input  class = "SNS" type="text" name="Otdel" placeholder="Отдел" required>
         <input  class = "SNS" type="text" name="Doljnost" placeholder="Должность" required>
@@ -155,13 +160,13 @@
         </script>
         <button  class = "SNS" type="submit">Добавить</button>
     </form> 
+    
     <p><b>Увольнение сотрудника:</b></p> 
     <form method = "post">
         <input  class = "SNS" type="text" name="IdSotr" placeholder="Код сотрудника" required>
         <button  class = "SNS" type="submit">Уволить</button>
         <?php
             $mysqli = new mysqli("127.0.0.1", "root", "", "UchetSotr");
-            // Проверяем соединение
             if ($mysqli->connect_error) {
                 die("Ошибка подключения: " . $mysqli->connect_error);
             }
@@ -171,8 +176,6 @@
                     echo "Подключение невозможно: " . mysqli_connect_error();
                     exit();
                 }
-
-                // Запрос для изменения статуса
                 $stmt = $mysqli->prepare("UPDATE Sotr SET StatusRaboti = 'Уволен' WHERE IdSotr = ? AND StatusRaboti = 'Работает'");
                 if ($stmt === false) {
                     die("Ошибка подготовки запроса: " . $mysqli->error);
