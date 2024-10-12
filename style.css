@@ -1,6 +1,11 @@
 body{
-    font-size: 16px;
+  font-size: 18px;
+  font-family: 'Times New Roman', Times, serif;
     align-content: center;
+}
+.diagonal-gradient {
+    background: rgb(238,174,202);
+    background: radial-gradient(circle, rgba(238,174,202,1) 0%, rgba(148,187,233,1) 100%);
 }
 h1{
     text-align: center;
@@ -26,4 +31,46 @@ table {
     margin:12px 19px;
     font-size: 16px;
     align-content: center; 
+}
+.SNS{
+    margin: 3px 7px;
+}
+button{
+  margin: 15px;
+  width: 150px;
+  height: 20px;
+  line-height: 2px;
+  font-size: 14px;
+  text-decoration: none;
+  color: #333;
+  border: 2px solid #333;
+  letter-spacing: 2px;
+  position: relative;
+  transition: all .35s;
+}
+
+button span{
+  position: relative;
+  z-index: 2;
+}
+
+button:after{
+  position: absolute;
+  content: "";
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background: #608fe6;
+  color:aliceblue;
+  transition: all .35s;
+}
+
+button:hover{
+    color:aliceblue;
+}
+
+button:hover:after{
+    width: 100%;
+    color:aliceblue;
 }
