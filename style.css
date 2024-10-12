@@ -1,9 +1,29 @@
-    table{
-        border: 2px  solid grey;
-        text-align: center;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        border: 1px  solid grey;
-     }
+body{
+    font-size: 16px;
+    align-content: center;
+}
+h1{
+    text-align: center;
+}
+th,
+td {
+    padding: 5px;
+    border: 2px solid rgb(0, 0, 0);
+    text-align: center;
+}
+table {
+    table-layout: fixed;
+    width: 97%;
+    border-collapse: collapse;
+    border: 2px solid rgb(0, 0, 0);
+}
+.filtrO{
+    margin:12px 27px;
+    font-size: 16px;
+    align-content: center; 
+}
+.filtr{
+    margin:12px 19px;
+    font-size: 16px;
+    align-content: center; 
+}
