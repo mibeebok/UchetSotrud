@@ -143,11 +143,11 @@
     <br>
     <p><b> Фильтрация соотрудников по должности или отделу и поиск по ФИО: </b></p>
     <form class = "filtr" method="GET" action="">
-        <label   class = "filtrO" for="Otdel">Отдел:</label>
+        <label   class = "filtrO" for="Otdel"><b>Отдел:</b></label>
         <input type="text" id="Otdel" name="FOtdel" value="<?php echo isset($_GET['Otdel']) ? htmlspecialchars($_GET['Otdel']) : ''; ?>">
-        <label   class = "filtrO" for="FIO">ФИО:</label>
+        <label   class = "filtrO" for="FIO"><b>ФИО:</b></label>
         <input type="text" id="FIO" name="FFIO" value="<?php echo isset($_GET['FIO']) ? htmlspecialchars($_GET['FIO']) : ''; ?>">
-        <label  class = "filtr" for="Doljnost">Должность:</label>
+        <label  class = "filtr" for="Doljnost"><b>Должность:</b></label>
         <input type="text" id="Doljnost" name="FDoljnost" value="<?php echo isset($_GET['Doljnost']) ? htmlspecialchars($_GET['Doljnost']) : ''; ?>">
         <button type="submit"><span>Найти</span></button>
     </form>
@@ -202,6 +202,6 @@
         ?>
     </form>
     <br>
-    <p name = "Update"><b>Редактирование сотрудников</b></p>
+    <p name = "Update"><b>Редактирование сотрудников:</b></p>
 </body>
 </html>
