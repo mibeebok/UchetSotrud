@@ -5,13 +5,21 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="style.css" rel="stylesheet" type="text/css" >
-    <script src="https://unpkg.com/imask"></script>
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="D:\php\htdocs\vera\jquery.maskedinput.min.js"></script>
-    <script src="mask.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script> 
+    <script src="jquery.maskedinput.min.js"></script>
     <title>Учёт сотрудников</title>
 </head>
 <body class="diagonal-gradient">
+<script> 
+            $(function(){ 
+                $("#pasport").mask("9999 999999"); 
+            }); 
+    </script> 
+    <script> 
+            $(function(){ 
+                $("#phone").mask("8(999)999-99-99"); 
+            }); 
+    </script>
     <h1> Учёт сотрудников </h1>
     <table>
         <thead>
@@ -118,6 +126,8 @@
                     <td><?php echo $row['RazmerZP']; ?></td>
                     <td><?php echo $row['DataPrinyatiyaNaRabotu']; ?></td>
                     <td><?php echo $row['StatusRaboti']; ?></td>
+                    <td><?php if ($row['StatusRaboti'] !== 'Уволен') {  
+                        echo "<a href='update.php?IdSotr=" . htmlspecialchars($row['IdSotr']) . "' '>Редактировать</a>"; }?></td>
                 </tr>
             <?php
             }
@@ -130,8 +140,8 @@
             
         </tbody>
     </table>
+    <br>
     <p><b> Фильтрация соотрудников по должности или отделу и поиск по ФИО: </b></p>
-    <!--возможно проблемой будет то что name не соответствует названию столбца в таблице !-->
     <form class = "filtr" method="GET" action="">
         <label   class = "filtrO" for="Otdel">Отдел:</label>
         <input type="text" id="Otdel" name="FOtdel" value="<?php echo isset($_GET['Otdel']) ? htmlspecialchars($_GET['Otdel']) : ''; ?>">
@@ -139,32 +149,28 @@
         <input type="text" id="FIO" name="FFIO" value="<?php echo isset($_GET['FIO']) ? htmlspecialchars($_GET['FIO']) : ''; ?>">
         <label  class = "filtr" for="Doljnost">Должность:</label>
         <input type="text" id="Doljnost" name="FDoljnost" value="<?php echo isset($_GET['Doljnost']) ? htmlspecialchars($_GET['Doljnost']) : ''; ?>">
-        <button type="submit">Найти</button>
+        <button type="submit"><span>Найти</span></button>
     </form>
+    <br>
     <p><b>Создание нового сотрудника: </b></p>
     <form method ="post">
         <input  class = "SNS" type="text" name="FIO" placeholder="ФИО" required>
         <input  class = "SNS" type="date" name="DataRojdeniya" placeholder="Дата рождения" required>
-        <input  class = "SNS" type="text" name="SeriyaNomerPasporta" placeholder="Серия и номер паспорта" required>
-        <input  class = "SNS" type="text" name="NomerTelefona" placeholder="8(___)___-__-__" required>
+        <input  class = "SNS" type="text" id = "pasport" name="SeriyaNomerPasporta" placeholder="Серия и номер паспорта" required>
+        <input  class = "SNS" type="text" id = "phone" name="NomerTelefona" placeholder="Номер телефона" required>
         <input  class = "SNS" type="text" name="AdresProjivaniya" placeholder="Адрес проживания" required>
         <input  class = "SNS" type="text" name="Otdel" placeholder="Отдел" required>
         <input  class = "SNS" type="text" name="Doljnost" placeholder="Должность" required>
         <input  class = "SNS" type="number" name="RazmerZP" placeholder="Размер зарплаты" required>
         <input  class = "SNS" type="date" name="DataPrinyatiyaNaRabotu" placeholder="Дата принятия на работу" required>
         <input  class = "SNS" type="text" name="StatusRaboti" value="Работает">
-        <script>
-            $(function(){
-                $("#SeriyaNomerPasporta").mask("99 99 999999");
-                });
-        </script>
-        <button  class = "SNS" type="submit">Добавить</button>
+        <button  class = "SNS" type="submit"><span>Добавить</span></button>
     </form> 
-    
+    <br>
     <p><b>Увольнение сотрудника:</b></p> 
     <form method = "post">
         <input  class = "SNS" type="text" name="IdSotr" placeholder="Код сотрудника" required>
-        <button  class = "SNS" type="submit">Уволить</button>
+        <button  class = "SNS" type="submit"><span>Уволить</span></button>
         <?php
             $mysqli = new mysqli("127.0.0.1", "root", "", "UchetSotr");
             if ($mysqli->connect_error) {
@@ -195,5 +201,7 @@
             }
         ?>
     </form>
+    <br>
+    <p name = "Update"><b>Редактирование сотрудников</b></p>
 </body>
 </html>
